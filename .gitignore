@@ -1,0 +1,9 @@
+_XLAM/
+.venv/
+venv/
+env/
+__pycache__/
+config.py
+install/config.py
+install/*.sql
+!install/*-sample

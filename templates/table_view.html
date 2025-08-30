@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>rootster: {{ table }}</title>
+    <style>
+      table, th, td { border: 1px solid #888; border-collapse: collapse; }
+      th, td { padding: 4px 8px; }
+    </style>
+</head>
+<body>
+    <h2>Таблица: {{ table }}</h2>
+    <table>
+      <tr>
+        {% for col in columns %}
+        <th>{{ col }}</th>
+        {% endfor %}
+      </tr>
+      {% for row in rows %}
+      <tr>
+        {% for col in columns %}
+        <td>{{ row[col] }}</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </table>
+    <br>
+    <a href="{{ url_for('tables') }}">Назад к списку таблиц</a> |
+    <a href="{{ url_for('logout') }}">Выйти</a>
+</body>
+</html>

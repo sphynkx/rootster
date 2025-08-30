@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>rootster: Вход</title>
+</head>
+<body>
+    <h2>Вход в rootster</h2>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+          {% for msg in messages %}
+            <li style="color: red;">{{ msg }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    <form method="POST">
+        <label>Логин: <input type="text" name="username"></label><br>
+        <label>Пароль: <input type="password" name="password"></label><br>
+        <button type="submit">Войти</button>
+    </form>
+</body>
+</html>
