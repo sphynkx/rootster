@@ -5,7 +5,6 @@ from config import MYSQL_CONFIG, SECRET_KEY
 import datetime
 import hashlib
 
-
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
 
@@ -52,7 +51,7 @@ def login():
         password = request.form["password"]
         if check_admin(username, password):
             session["admin"] = username
-            return redirect(url_for("tables"))
+            return redirect(url_for("index"))
         else:
             flash("Incorrect login or password!!")
     return render_template("login.html")
@@ -64,12 +63,12 @@ def logout():
     return redirect(url_for("login"))
 
 
-@app.route("/tables")
-def tables():
+@app.route("/index")
+def index():
     if "admin" not in session:
         return redirect(url_for("login"))
     all_tables = get_table_list()
-    return render_template("tables.html", all_tables=all_tables)
+    return render_template("index.html", all_tables=all_tables)
 
 
 @app.route("/table/<table>")
@@ -92,4 +91,3 @@ def table_view(table):
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port="5000")
-
