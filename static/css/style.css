@@ -1,0 +1,130 @@
+/* Login Page */
+.login_table, .login_table th, .login_table td {
+    border: none;
+}
+.login_table {
+    margin: 0 auto; /* Set it centered */
+}
+.login_label {
+    font-weight: bold;
+    padding-right: 8px;
+}
+.login_input {
+    width: 180px;
+    padding: 4px;
+}
+.login_button_cell {
+    text-align: center;
+}
+.login_button {
+    border: 2px dotted grey;
+    box-shadow: 5px 5px 5px #aaa;
+    text-shadow: 2px 5px 5px #aaa;	
+    font-weight: bold;
+}
+.login_button:hover {
+    background: #ccc;
+}
+.login_h2 {
+    text-align: center;
+}
+
+
+/* Common text beautifications */
+h2, a, .login_label {
+    text-shadow: 2px 5px 5px #aaa;	
+    font-weight: bold;
+}
+
+
+/* All DB tables */
+table {
+    border: 2px dotted grey;
+    box-shadow: 5px 5px 5px #aaa;
+}
+table, th, td { 
+	border: 1px solid #888;
+	border-collapse: collapse;
+	}
+th, td {
+	padding: 4px 8px;
+    vertical-align: top;
+	}
+th {
+    background: #eee;
+}
+td.col-max_verses {/* Forcely split long lines in `max_verses` field (`books` table) */
+    word-break: break-all;
+    white-space: pre-line;
+    max-width: 350px;
+}
+
+
+/* "Show more" in the `table_view.html` - for big `data` field. */
+summary {
+    border: 2px dotted grey;
+    box-shadow: 5px 5px 5px #aaa;
+	width: 150px;
+	padding: 5px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+
+/* Static panel at the top */
+.panel {
+    margin-bottom: 1em;
+    padding: 5px;
+    background: #fff;
+    /*width: 270px;*/
+    border: 2px dotted grey;
+    box-shadow: 5px 5px 5px #aaa;
+    display: inline-block;
+    white-space: nowrap;
+    position: sticky;
+    top: 2px;
+    z-index: 100;
+}
+.panel a {
+    margin-right: 1em;
+    font-weight: bold;
+    color: #337ab7;
+    text-decoration: none;
+}
+.panel a:hover {
+    text-decoration: underline;
+}
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropbtn {
+  cursor: pointer;
+  text-decoration: none;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  left: 0;
+  background-color: #fff;
+  min-width: 160px;
+  box-shadow: 2px 2px 4px #aaa;
+  border: 1px solid #aaa;
+  z-index: 200;
+}
+.dropdown-content a {
+  color: #333;
+  padding: 8px 12px;
+  text-decoration: none;
+  display: block;
+}
+.dropdown-content a:hover {
+  background-color: #eee;
+}
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+
+
+

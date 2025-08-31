@@ -2,10 +2,11 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>rootster: Вход</title>
+    <title>rootster: Login</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h2>Вход в rootster</h2>
+    <h2 class="login_h2">Login to rootster</h2>
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         <ul>
@@ -15,10 +16,20 @@
         </ul>
       {% endif %}
     {% endwith %}
-    <form method="POST">
-        <label>Логин: <input type="text" name="username"></label><br>
-        <label>Пароль: <input type="password" name="password"></label><br>
-        <button type="submit">Войти</button>
-    </form>
+	<form method="post">
+	  <table class="login_table">
+		<tr>
+		  <td><label class="login_label" for="login_username">Login:</label></td>
+		  <td><input class="login_input" id="login_username" type="text" name="username"></td>
+		</tr>
+		<tr>
+		  <td><label class="login_label" for="login_password">Password:</label></td>
+		  <td><input class="login_input" id="login_password" type="password" name="password"></td>
+		</tr>
+		<tr>
+		  <td colspan="2"  class="login_button_cell"><button class="login_button" type="submit">Login</button></td>
+		</tr>
+	  </table>
+	</form>
 </body>
 </html>

@@ -3,29 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <title>rootster: {{ table }}</title>
-    <style>
-      table, th, td { border: 1px solid #888; border-collapse: collapse; }
-      th, td { padding: 4px 8px; }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h2>Таблица: {{ table }}</h2>
-    <table>
-      <tr>
-        {% for col in columns %}
-        <th>{{ col }}</th>
-        {% endfor %}
-      </tr>
-      {% for row in rows %}
-      <tr>
-        {% for col in columns %}
-        <td>{{ row[col] }}</td>
-        {% endfor %}
-      </tr>
-      {% endfor %}
-    </table>
+<div class="panel">
+<div class="dropdown">
+  <a href="{{ url_for('tables') }}" class="dropbtn">Back</a>
+  <div class="dropdown-content">
+    {% for table in all_tables %}
+      <a href="{{ url_for('table_view', table=table) }}">{{ table }}</a>
+    {% endfor %}
+  </div>
+</div>
+    <!-- a href="{{ url_for('tables') }}">Back</a --> | 
+    <a href="{{ url_for('logout') }}">Logout</a>
+</div>
+
+    <h2>Table: {{ table }}</h2>
+		<table>
+		  <tr>
+			{% for col in columns %}
+			  <th class="col-{{ col }}">{{ col }}</th>
+			{% endfor %}
+		  </tr>
+		  {% for row in rows %}
+		  <tr>
+			{% set preview_limit = 2000 %}
+			{% for col in columns %}
+			  <td class="col-{{ col }}">
+				{% if col == 'data' and row[col]|length > preview_limit %}
+				  {{ row[col][:preview_limit] | safe }}
+				  <p>
+				  <details>
+					<summary>Show more</summary>
+					  {{ row[col][preview_limit:] | safe }}
+				  </details>
+				  </p>
+				{% else %}
+				  {{ row[col] | safe }}
+				{% endif %}
+			  </td>
+			{% endfor %}
+		  </tr>
+		  {% endfor %}
+		</table>
     <br>
-    <a href="{{ url_for('tables') }}">Назад к списку таблиц</a> |
-    <a href="{{ url_for('logout') }}">Выйти</a>
 </body>
 </html>

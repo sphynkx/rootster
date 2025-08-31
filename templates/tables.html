@@ -2,15 +2,19 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>rootster: Таблицы</title>
+    <title>rootster: Tables</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h2>Список таблиц</h2>
+<div class="panel">
+    <a href="{{ url_for('logout') }}">Logout</a>
+</div>
+
+    <h2>List of tables</h2>
     <ul>
         {% for t in tables %}
         <li><a href="{{ url_for('table_view', table=t) }}">{{ t }}</a></li>
         {% endfor %}
     </ul>
-    <a href="{{ url_for('logout') }}">Выйти</a>
 </body>
 </html>

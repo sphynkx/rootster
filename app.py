@@ -24,7 +24,6 @@ def check_admin(username, password):
             if admin:
                 pwd_hash = hashlib.md5(password.encode('utf-8')).hexdigest()
                 if admin["password_hash"] == pwd_hash:
-                    # Обновляем last_login
                     cursor.execute(
                         "UPDATE admins SET last_login = %s WHERE username = %s",
                         (datetime.datetime.now(), username)
@@ -36,6 +35,16 @@ def check_admin(username, password):
     return False
 
 
+def get_table_list():
+    conn = get_db()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SHOW TABLES")
+            return [row[f"Tables_in_{MYSQL_CONFIG['database']}"] for row in cursor.fetchall()]
+    finally:
+        conn.close()
+
+
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -45,7 +54,7 @@ def login():
             session["admin"] = username
             return redirect(url_for("tables"))
         else:
-            flash("Неверный логин или пароль")
+            flash("Incorrect login or password!!")
     return render_template("login.html")
 
 
@@ -59,13 +68,7 @@ def logout():
 def tables():
     if "admin" not in session:
         return redirect(url_for("login"))
-    conn = get_db()
-    try:
-        with conn.cursor() as cursor:
-            cursor.execute("SHOW TABLES")
-            tables = [row[f"Tables_in_{MYSQL_CONFIG['database']}"] for row in cursor.fetchall()]
-    finally:
-        conn.close()
+    tables = get_table_list()
     return render_template("tables.html", tables=tables)
 
 
@@ -73,16 +76,17 @@ def tables():
 def table_view(table):
     if "admin" not in session:
         return redirect(url_for("login"))
+    all_tables = get_table_list()
     conn = get_db()
     try:
         with conn.cursor() as cursor:
-            cursor.execute(f"SELECT * FROM `{table}` LIMIT 100")
+            cursor.execute(f"SELECT * FROM `{table}`  ORDER BY id DESC LIMIT 100")
             rows = cursor.fetchall()
             cursor.execute(f"SHOW COLUMNS FROM `{table}`")
             columns = [col["Field"] for col in cursor.fetchall()]
     finally:
         conn.close()
-    return render_template("table_view.html", table=table, rows=rows, columns=columns)
+    return render_template("table_view.html", all_tables=all_tables, table=table, rows=rows, columns=columns)
 
 
 
