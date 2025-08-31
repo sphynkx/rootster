@@ -3,6 +3,7 @@
     border: none;
 }
 .login_table {
+	border: 2px dotted #888;
     margin: 0 auto; /* Set it centered */
 }
 .login_label {
@@ -39,11 +40,11 @@ h2, a, .login_label {
 
 /* All DB tables */
 table {
-    border: 2px dotted grey;
+    /*border: 2px dotted grey;*/
     box-shadow: 5px 5px 5px #aaa;
 }
 table, th, td { 
-	border: 1px solid #888;
+	border: 2px dotted #888;
 	border-collapse: collapse;
 	}
 th, td {

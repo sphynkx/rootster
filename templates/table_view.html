@@ -40,7 +40,7 @@
 				  </details>
 				  </p>
 				{% else %}
-				  {{ row[col] | safe }}
+				  {{ row[col] | safe }} <!-- 2DBG: remove safe to switch to raw ouput -->
 				{% endif %}
 			  </td>
 			{% endfor %}

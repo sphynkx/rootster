@@ -7,14 +7,20 @@
 </head>
 <body>
 <div class="panel">
+
+<div class="dropdown">
+  <a href="{{ url_for('tables') }}" class="dropbtn">List of tables</a>
+  <div class="dropdown-content">
+    {% for table in all_tables %}
+      <a href="{{ url_for('table_view', table=table) }}">{{ table }}</a>
+    {% endfor %}
+  </div>
+</div>
+
     <a href="{{ url_for('logout') }}">Logout</a>
 </div>
 
-    <h2>List of tables</h2>
-    <ul>
-        {% for t in tables %}
-        <li><a href="{{ url_for('table_view', table=t) }}">{{ t }}</a></li>
-        {% endfor %}
-    </ul>
+<!-- Here will be placed something useful, interesting.. for ex., statistics, diagrams.. -->
+
 </body>
 </html>

@@ -68,8 +68,8 @@ def logout():
 def tables():
     if "admin" not in session:
         return redirect(url_for("login"))
-    tables = get_table_list()
-    return render_template("tables.html", tables=tables)
+    all_tables = get_table_list()
+    return render_template("tables.html", all_tables=all_tables)
 
 
 @app.route("/table/<table>")
