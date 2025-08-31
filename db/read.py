@@ -36,7 +36,7 @@ def get_table_list():
 
 def get_table_rows_and_columns(table):
     """
-    Получить последние 100 строк и список колонок для таблицы.
+    Get last 100 records and columns list for table.
     """
     conn = get_db()
     try:

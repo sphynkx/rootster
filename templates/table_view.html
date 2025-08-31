@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <title>rootster: {{ table }}</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython_stdlib.js"></script>
+<script type="text/python" src="{{ url_for('static', filename='brython/script.bry') }}"></script>
+<script>
+window.onload = function() { brython(); }
+</script>
 </head>
 <body>
 <div class="panel">
@@ -19,14 +25,24 @@
 </div>
 
     <h2>Table: {{ table }}</h2>
-		<table>
+		<table id="table-view" data-table="{{ table }}">
 		  <tr>
+			<th>Action</th>
 			{% for col in columns %}
 			  <th class="col-{{ col }}">{{ col }}</th>
 			{% endfor %}
 		  </tr>
 		  {% for row in rows %}
 		  <tr>
+<td>
+  {% if table == "requests" %}
+    <button class="delete-btn" data-request-id="{{ row['id'] }}">DEL</button>
+  {% elif table == "responses" %}
+    <button class="delete-btn" data-response-id="{{ row['id'] }}">DEL</button>
+  {% else %}
+    <button class="delete-btn" data-generic-id="{{ row['id'] }}">DEL</button>
+  {% endif %}
+</td>
 			{% set preview_limit = 2000 %}
 			{% for col in columns %}
 			  <td class="col-{{ col }}">

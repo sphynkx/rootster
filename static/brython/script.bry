@@ -1,0 +1,69 @@
+from browser import document, ajax, window
+
+
+def delete_click(ev):
+    btn = ev.target
+    request_id = btn.attrs.get("data-request-id")
+    response_id = btn.attrs.get("data-response-id")
+    generic_id = btn.attrs.get("data-generic-id")
+
+    if request_id is not None:
+        ## For `requests`
+##        if not window.confirm(f"Delete request with id={request_id}??"):
+##            return
+
+        def on_complete(req):
+            if req.status == 200 and req.json["success"]:
+                btn.parent.parent.remove()
+            else:
+                window.alert("Deletion error!!")
+
+        req = ajax.ajax()
+        req.bind('complete', on_complete)
+        req.open('POST', f'/delete_request/{request_id}', True)
+        req.set_header('Content-Type', 'application/x-www-form-urlencoded')
+        req.send()
+        return
+
+    if response_id is not None:
+        ## For `responses`
+##        if not window.confirm(f"Delete response with id={response_id}??"):
+##            return
+
+        def on_complete(req):
+            if req.status == 200 and req.json["success"]:
+                btn.parent.parent.remove()
+            else:
+                window.alert("Deletion error!!")
+
+        req = ajax.ajax()
+        req.bind('complete', on_complete)
+        req.open('POST', f'/delete_response/{response_id}', True)
+        req.set_header('Content-Type', 'application/x-www-form-urlencoded')
+        req.send()
+        return
+
+    if generic_id is not None:
+        ## any other tables..
+        ## For <table> set `id="table-view"`, `data-table="{{ table }}"`
+        table = document['table-view'].attrs['data-table']  
+##        if not window.confirm(f"Delete record with {table} with id={generic_id}??"):
+##            return
+
+        def on_complete(req):
+            if req.status == 200 and req.json["success"]:
+                btn.parent.parent.remove()
+            else:
+                window.alert("Deletion error!!")
+
+        req = ajax.ajax()
+        req.bind('complete', on_complete)
+        req.open('POST', f'/delete_generic/{table}/{generic_id}', True)
+        req.set_header('Content-Type', 'application/x-www-form-urlencoded')
+        req.send()
+        return
+
+for btn in document.select(".delete-btn"):
+    btn.bind("click", delete_click)
+
+

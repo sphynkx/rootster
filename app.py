@@ -1,7 +1,7 @@
 #!/usr/bin/python
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import pymysql
-from config import MYSQL_CONFIG, SECRET_KEY
+from config import MYSQL_CONFIG, SECRET_KEY, PERMIT_DELETE_EXCLUDE_TABLES
 from db import get_db
 from db.read import *
 from db.delete import *
@@ -50,6 +50,36 @@ def table_view(table):
         rows=rows,
         columns=columns
     )
+
+
+@app.route("/delete_response/<int:response_id>", methods=["POST"])
+def delete_response(response_id):
+    if "admin" not in session:
+        return {"success": False, "error": "Not authorized"}, 403
+    result = delete_response_and_request(response_id)
+    return {"success": bool(result)}
+
+
+@app.route("/delete_request/<int:request_id>", methods=["POST"])
+def delete_request(request_id):
+    if "admin" not in session:
+        return {"success": False, "error": "Not authorized"}, 403
+    from db.delete import delete_request_and_response
+    result = delete_request_and_response(request_id)
+    return {"success": bool(result)}
+
+
+## Deletes record from any 
+@app.route("/delete_generic/<table>/<int:row_id>", methods=["POST"])
+def delete_generic(table, row_id):
+    if "admin" not in session:
+        return {"success": False, "error": "Not authorized"}, 403
+
+    ok = delete_row_from_table(table, row_id, PERMIT_DELETE_EXCLUDE_TABLES)
+    if ok:
+        return {"success": True}
+    return {"success": False, "error": "Table not allowed"}, 400
+
 
 
 if __name__ == "__main__":

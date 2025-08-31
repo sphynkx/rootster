@@ -8,3 +8,6 @@ MYSQL_CONFIG = {
 }
 
 SECRET_KEY = "change_this_to_a_secure_random_string"
+
+## Permit records deletion from some tables
+PERMIT_DELETE_EXCLUDE_TABLES = {"admins", "books"}
