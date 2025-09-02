@@ -5,6 +5,9 @@
 .login_table {
 	border: 2px dotted #888;
     margin: 0 auto; /* Set it centered */
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 10px;
 }
 .login_label {
     font-weight: bold;
@@ -13,6 +16,9 @@
 .login_input {
     width: 180px;
     padding: 4px;
+    border: none;
+    box-shadow: 5px 5px 5px #aaa;
+    border-radius: 5px;
 }
 .login_button_cell {
     text-align: center;
@@ -22,6 +28,7 @@
     box-shadow: 5px 5px 5px #aaa;
     text-shadow: 2px 5px 5px #aaa;	
     font-weight: bold;
+    border-radius: 5px;
 }
 .login_button:hover {
     background: #ccc;
@@ -40,14 +47,15 @@ h2, a, .login_label {
 
 /* All DB tables */
 table {
-    /*border: 2px dotted grey;*/
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px dotted grey;
+    border-radius: 10px;
+    overflow: hidden;
     box-shadow: 5px 5px 5px #aaa;
 }
-table, th, td { 
-	border: 2px dotted #888;
-	border-collapse: collapse;
-	}
 th, td {
+	border: 1px dotted #888;
 	padding: 4px 8px;
     vertical-align: top;
 	}
@@ -58,6 +66,13 @@ td.col-max_verses {/* Forcely split long lines in `max_verses` field (`books` ta
     word-break: break-all;
     white-space: pre-line;
     max-width: 350px;
+}
+
+/* Delete buttons for tables rows */
+.delete-btn {
+	border: 2px dotted #888;
+    box-shadow: 5px 5px 5px #aaa;
+    border-radius: 5px;	
 }
 
 
@@ -80,6 +95,7 @@ summary {
     /*width: 270px;*/
     border: 2px dotted grey;
     box-shadow: 5px 5px 5px #aaa;
+    border-radius: 10px;
     display: inline-block;
     white-space: nowrap;
     position: sticky;
@@ -96,34 +112,35 @@ summary {
     text-decoration: underline;
 }
 .dropdown {
-  position: relative;
-  display: inline-block;
+	position: relative;
+	display: inline-block;
 }
 .dropbtn {
-  cursor: pointer;
-  text-decoration: none;
+	cursor: pointer;
+	text-decoration: none;
 }
 .dropdown-content {
-  display: none;
-  position: absolute;
-  left: 0;
-  background-color: #fff;
-  min-width: 160px;
-  box-shadow: 2px 2px 4px #aaa;
-  border: 1px solid #aaa;
-  z-index: 200;
+	display: none;
+	position: absolute;
+	left: 0;
+	background-color: #fff;
+	min-width: 160px;
+	box-shadow: 2px 2px 4px #aaa;
+	border: 1px solid #aaa;
+	border-radius: 10px;
+	z-index: 200;
 }
 .dropdown-content a {
-  color: #333;
-  padding: 8px 12px;
-  text-decoration: none;
-  display: block;
+	color: #333;
+	padding: 8px 12px;
+	text-decoration: none;
+	display: block;
 }
 .dropdown-content a:hover {
-  background-color: #eee;
+	background-color: #eee;
 }
 .dropdown:hover .dropdown-content {
-  display: block;
+	display: block;
 }
 
 
