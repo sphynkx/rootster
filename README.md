@@ -13,9 +13,12 @@ chmod +x app.py
 pip install -r install/requirements.txt
 cp install/config.py-sample config.py
 ```
-Set necessary params at `config.py`.
+Set necessary params at `config.py`. For the `SECRET_KEY` you may use:
+```
+pwmake 123
+```
 
-run:
+Next - run:
 ```
 ./app.py
 ```
@@ -62,23 +65,16 @@ systemctl enable rootster
 ```
 
 
-## Internal Nginx configuration
-If hosting and app are on the same server..
-
-....
-
-
-
-## External Nginx configuration
-Optionally, if hosting is not same with app.. No need to configure internal nginx (as above). Proxying will be directly. Create `/etc/nginx/conf.d/rootster.conf `:
+## Nginx configuration
+Create `/etc/nginx/conf.d/rootster.conf `:
 ```
     server {
-        server_name  rootster.sphynkx.org.ua;
+        server_name  rootster.veda.wiki;
         listen       80;
         access_log   /var/log/nginx/rootster-access.log  main;
         error_log   /var/log/nginx/rootster-error.log;
         location / {
-        proxy_pass      http://192.168.7.27:5000;
+        proxy_pass      http://127.0.0.1:5000;
         proxy_connect_timeout       600;
         proxy_send_timeout          600;
         proxy_read_timeout          600;
@@ -87,6 +83,8 @@ Optionally, if hosting is not same with app.. No need to configure internal ngin
 
 }
 ```
+If hosting and app are on the same server, set IP the `proxy_pass` to "127.0.0.1". For separate server - set its IP. Also modify `server_name` to actual subdomain.
+
 Next:
 ```
 letsencrypt
