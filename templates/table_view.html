@@ -40,7 +40,7 @@
 <h2>Table: {{ table }}</h2>
 <table id="table-view" data-table="{{ table }}">
     <tr>
-        <th>Action</th>
+        <th width=120px>Action</th>
         {% for col in columns %}
             <th class="col-{{ col }}">{{ col }}</th>
         {% endfor %}
@@ -48,9 +48,9 @@
     {% for row in rows %}
     <tr data-row-id="{{ row['id'] }}">
         <td>
-            <button class="edit-btn" title="Edit">&#9998;</button><br>
-            <button class="save-btn" title="Save" style="display:none;">&#128190;</button><br>
-            <button class="undo-btn" title="Undo" style="display:none;">&#8630;</button><br><br>
+            <button class="edit-btn" title="Edit">&#9998;</button>
+            <button class="save-btn" title="Save" style="display:none;">&#128190;</button>
+            <button class="undo-btn" title="Undo" style="display:none;">&#8630;</button>
             {% if table == "requests" %}
                 <button class="delete-btn" data-request-id="{{ row['id'] }}">DEL</button>
             {% elif table == "responses" %}
