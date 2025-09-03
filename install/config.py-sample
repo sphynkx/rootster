@@ -11,3 +11,28 @@ SECRET_KEY = "change_this_to_a_secure_random_string"
 
 ## Permit records deletion from some tables
 PERMIT_DELETE_EXCLUDE_TABLES = {"admins", "books"}
+
+## Permit tables fields to edit. Any else are prohibited.
+EDITABLE_FIELDS = {
+    "books": [
+        "bookname_ru",
+        "bookname_en",
+        "category",
+        "synonyms_ru",
+        "synonyms_en",
+        "max_chapter",
+        "max_verses",
+    ],
+    "users": [
+        "blacklisted",
+        "whitelisted",
+    ],
+    "responses": [
+        "data",              # HTML, WYSIWYG
+    ],
+    "admins": [
+        "full_name",
+        "role",
+        "is_active",
+    ],
+}

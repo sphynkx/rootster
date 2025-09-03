@@ -68,11 +68,18 @@ td.col-max_verses {/* Forcely split long lines in `max_verses` field (`books` ta
     max-width: 350px;
 }
 
-/* Delete buttons for tables rows */
+
+/* Delete, Edit, Save, Undo buttons for tables rows */
 .delete-btn {
 	border: 2px dotted #888;
     box-shadow: 5px 5px 5px #aaa;
     border-radius: 5px;	
+}
+.save-btn, .edit-btn, .undo-btn {
+	border: 2px dotted #888;
+    box-shadow: 5px 5px 5px #aaa;
+    border-radius: 5px;	
+	width: 30px;
 }
 
 

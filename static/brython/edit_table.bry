@@ -1,0 +1,130 @@
+from browser import document, ajax, window
+import json
+
+
+def is_editable(table, col):
+    editable_fields = window.EDITABLE_FIELDS
+    permit_exclude = window.PERMIT_DELETE_EXCLUDE_TABLES
+    if table in editable_fields:
+        allowed_cols = editable_fields[table]
+    else:
+        allowed_cols = []
+    return (col in allowed_cols) and (table not in permit_exclude)
+
+
+def switch_row_to_edit(row):
+    table = window.table
+    row_id = row.attrs['data-row-id']
+    for td in row.select('td[data-col]'):
+        col = td.attrs['data-col']
+        if is_editable(table, col):
+            td.select_one('.view-mode').style.display = "none"
+            edit_field = td.select_one('.edit-mode')
+            if edit_field:
+                edit_field.style.display = ""
+            if table == 'responses' and col == 'data':
+                html = td.attrs.get('data-fulltext', '')
+                window.init_pell_for_row(row_id, html)
+    row.select_one('.edit-btn').style.display = "none"
+    row.select_one('.save-btn').style.display = ""
+    row.select_one('.undo-btn').style.display = ""
+
+
+def switch_row_to_view(row):
+    table = window.table
+    row_id = row.attrs['data-row-id']
+    for td in row.select('td[data-col]'):
+        col = td.attrs['data-col']
+        if is_editable(table, col):
+            td.select_one('.view-mode').style.display = ""
+            edit_field = td.select_one('.edit-mode')
+            if edit_field:
+                edit_field.style.display = "none"
+            if table == 'responses' and col == 'data':
+                window.destroy_pell_for_row(row_id)
+    row.select_one('.edit-btn').style.display = ""
+    row.select_one('.save-btn').style.display = "none"
+    row.select_one('.undo-btn').style.display = "none"
+
+
+def on_edit(ev):
+    row = ev.target.closest('tr')
+    switch_row_to_edit(row)
+
+
+def on_undo(ev):
+    row = ev.target.closest('tr')
+    table = window.table
+    row_id = row.attrs['data-row-id']
+    for td in row.select('td[data-col]'):
+        col = td.attrs['data-col']
+        if is_editable(table, col):
+            ## Restore full HTML
+            current_val = td.attrs.get('data-fulltext', '') if (table == 'responses' and col == 'data') else td.select_one('.view-mode').text
+            if table == 'responses' and col == 'data':
+                window.init_pell_for_row(row_id, current_val)
+            else:
+                input_ = td.select_one('input.edit-mode')
+                if input_:
+                    input_.value = td.select_one('.view-mode').text
+    switch_row_to_view(row)
+
+def on_save(ev):
+    row = ev.target.closest('tr')
+    table = window.table
+    row_id = row.attrs['data-row-id']
+    payload = {'id': row_id}
+    for td in row.select('td[data-col]'):
+        col = td.attrs['data-col']
+        if is_editable(table, col):
+            if table == 'responses' and col == 'data':
+                payload[col] = window.get_pell_html(row_id)
+            else:
+                input_ = td.select_one('input.edit-mode')
+                if input_:
+                    payload[col] = input_.value
+
+    def on_complete(req):
+        preview_limit = 2000  ## Limit same as in the template!!
+        if req.status == 200 and req.json['success']:
+            for td in row.select('td[data-col]'):
+                col = td.attrs['data-col']
+                if is_editable(table, col):
+                    new_val = payload[col]
+                    if table == 'responses' and col == 'data':
+                        if len(new_val) > preview_limit:
+                            short = new_val[:preview_limit]
+                            long = new_val[preview_limit:]
+                            td.select_one('.view-mode').innerHTML = (
+                                short +
+                                '<p><details><summary>Show more</summary>' +
+                                long +
+                                '</details></p>'
+                            )
+                        else:
+                            td.select_one('.view-mode').innerHTML = new_val
+                        td.attrs['data-fulltext'] = new_val
+                    else:
+                        td.select_one('.view-mode').text = new_val
+            switch_row_to_view(row)
+##            window.alert("Saved successfully!")
+        else:
+            window.alert("Failed to save changes!")
+
+    req = ajax.ajax()
+    req.bind('complete', on_complete)
+    req.open('POST', f'/edit_row/{table}/{row_id}', True)
+    req.set_header('Content-Type', 'application/json')
+    req.send(json.dumps(payload))
+
+for row in document.select('tr[data-row-id]'):
+    edit_btn = row.select_one('.edit-btn')
+    undo_btn = row.select_one('.undo-btn')
+    save_btn = row.select_one('.save-btn')
+    if edit_btn:
+        edit_btn.bind('click', on_edit)
+    if undo_btn:
+        undo_btn.bind('click', on_undo)
+    if save_btn:
+        save_btn.bind('click', on_save)
+

@@ -4,64 +4,121 @@
     <meta charset="UTF-8">
     <title>rootster: {{ table }}</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython_stdlib.js"></script>
-<script type="text/python" src="{{ url_for('static', filename='brython/script.bry') }}"></script>
-<script>
-window.onload = function() { brython(); }
-</script>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/pell.css') }}">
+    <script src="https://unpkg.com/pell"></script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython_stdlib.js"></script>
+    <script type="text/python" src="{{ url_for('static', filename='brython/delete_row.bry') }}"></script>
+    <script type="text/python" src="{{ url_for('static', filename='brython/edit_table.bry') }}"></script>
+    <script>
+    window.onload = function() { brython(); }
+    window.EDITABLE_FIELDS = {{ EDITABLE_FIELDS|tojson }};
+    window.PERMIT_DELETE_EXCLUDE_TABLES = {{ PERMIT_DELETE_EXCLUDE_TABLES|tojson }};
+    window.table = "{{ table }}";
+    </script>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <style>
+      .pell-content { min-height: 250px; }
+    </style>
 </head>
 <body>
 <div class="panel">
-<div class="dropdown">
-  <a href="{{ url_for('index') }}" class="dropbtn">Main</a>
-  <div class="dropdown-content">
-    {% for table in all_tables %}
-      <a href="{{ url_for('table_view', table=table) }}">{{ table }}</a>
-    {% endfor %}
-  </div>
-</div>
+    <div class="dropdown">
+        <a href="{{ url_for('index') }}" class="dropbtn">Main</a>
+        <div class="dropdown-content">
+            {% for t in all_tables %}
+                <a href="{{ url_for('table_view', table=t) }}">{{ t }}</a>
+            {% endfor %}
+        </div>
+    </div>
     <a href="{{ url_for('logout') }}">Logout</a>
 </div>
 
-    <h2>Table: {{ table }}</h2>
-		<table id="table-view" data-table="{{ table }}">
-		  <tr>
-			<th>Action</th>
-			{% for col in columns %}
-			  <th class="col-{{ col }}">{{ col }}</th>
-			{% endfor %}
-		  </tr>
-		  {% for row in rows %}
-		  <tr>
-<td>
-  {% if table == "requests" %}
-    <button class="delete-btn" data-request-id="{{ row['id'] }}">DEL</button>
-  {% elif table == "responses" %}
-    <button class="delete-btn" data-response-id="{{ row['id'] }}">DEL</button>
-  {% else %}
-    <button class="delete-btn" data-generic-id="{{ row['id'] }}">DEL</button>
-  {% endif %}
-</td>
-			{% set preview_limit = 2000 %}
-			{% for col in columns %}
-			  <td class="col-{{ col }}">
-				{% if col == 'data' and row[col]|length > preview_limit %}
-				  {{ row[col][:preview_limit] | safe }}
-				  <p>
-				  <details>
-					<summary>Show more</summary>
-					  {{ row[col][preview_limit:] | safe }}
-				  </details>
-				  </p>
-				{% else %}
-				  {{ row[col] | safe }} <!-- 2DBG: remove safe to switch to raw ouput -->
-				{% endif %}
-			  </td>
-			{% endfor %}
-		  </tr>
-		  {% endfor %}
-		</table>
-    <br>
+<h2>Table: {{ table }}</h2>
+<table id="table-view" data-table="{{ table }}">
+    <tr>
+        <th>Action</th>
+        {% for col in columns %}
+            <th class="col-{{ col }}">{{ col }}</th>
+        {% endfor %}
+    </tr>
+    {% for row in rows %}
+    <tr data-row-id="{{ row['id'] }}">
+        <td>
+            <button class="edit-btn" title="Edit">&#9998;</button><br>
+            <button class="save-btn" title="Save" style="display:none;">&#128190;</button><br>
+            <button class="undo-btn" title="Undo" style="display:none;">&#8630;</button><br><br>
+            {% if table == "requests" %}
+                <button class="delete-btn" data-request-id="{{ row['id'] }}">DEL</button>
+            {% elif table == "responses" %}
+                <button class="delete-btn" data-response-id="{{ row['id'] }}">DEL</button>
+            {% else %}
+                <button class="delete-btn" data-generic-id="{{ row['id'] }}">DEL</button>
+            {% endif %}
+        </td>
+        {% set preview_limit = 2000 %}
+        {% for col in columns %}
+            {% set is_long = col == "data" and row[col]|length > preview_limit %}
+            <td class="col-{{ col }}" data-col="{{ col }}"
+                {% if table == 'responses' and col == 'data' %}
+                    data-fulltext="{{ row[col]|replace('"', '&quot;')|safe }}"
+                {% endif %}
+            >
+            {% if col in EDITABLE_FIELDS.get(table, []) and table not in PERMIT_DELETE_EXCLUDE_TABLES %}
+                <div class="view-mode" style="">
+                    {% if table == 'responses' and col == 'data' and is_long %}
+                        {{ row[col][:preview_limit] | safe }}
+                        <p>
+                        <details>
+                            <summary>Show more</summary>
+                            {{ row[col][preview_limit:] | safe }}
+                        </details>
+                        </p>
+                    {% elif table == 'responses' and col == 'data' %}
+                        {{ row[col]|safe }}
+                    {% elif is_long %}
+                        {{ row[col][:preview_limit] | safe }}
+                        <p>
+                        <details>
+                            <summary>Show more</summary>
+                            {{ row[col][preview_limit:] | safe }}
+                        </details>
+                        </p>
+                    {% else %}
+                        {{ row[col] }}
+                    {% endif %}
+                </div>
+                {% if table == 'responses' and col == 'data' %}
+                    <div class="edit-mode" style="display:none;">
+                        <!-- The pell container will create dynamically -->
+                    </div>
+                {% else %}
+                    <input class="edit-mode" style="display:none; width:100%;" type="text" value="{{ row[col] }}">
+                {% endif %}
+            {% else %}
+                {% if is_long %}
+                    {{ row[col][:preview_limit] | safe }}
+                    <p>
+                    <details>
+                        <summary>Show more</summary>
+                        {{ row[col][preview_limit:] | safe }}
+                    </details>
+                    </p>
+                {% else %}
+                    {{ row[col]|safe if table == 'responses' and col == 'data' else row[col] }}
+                {% endif %}
+            {% endif %}
+            </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+<br>
 </body>
+<script>
+//moved to static/js/script.js
+</script>
 </html>

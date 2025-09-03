@@ -1,13 +1,16 @@
 #!/usr/bin/python
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 import pymysql
-from config import MYSQL_CONFIG, SECRET_KEY, PERMIT_DELETE_EXCLUDE_TABLES
+from config import MYSQL_CONFIG, SECRET_KEY, PERMIT_DELETE_EXCLUDE_TABLES, EDITABLE_FIELDS
+from utils import *
 from db import get_db
 from db.read import *
 from db.delete import *
+from db.edit import *
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
+app.context_processor(inject_config)
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -43,6 +46,10 @@ def table_view(table):
         return redirect(url_for("login"))
     all_tables = get_table_list()
     rows, columns = get_table_rows_and_columns(table)
+## 2DEL - Unactual 
+##    for row in rows:
+##        if table == "responses" and 'data' in row:
+##            row['data'] = protect_user_paragraphs(row['data'])
     return render_template(
         "table_view.html",
         all_tables=all_tables,
@@ -64,7 +71,6 @@ def delete_response(response_id):
 def delete_request(request_id):
     if "admin" not in session:
         return {"success": False, "error": "Not authorized"}, 403
-    from db.delete import delete_request_and_response
     result = delete_request_and_response(request_id)
     return {"success": bool(result)}
 
@@ -79,6 +85,12 @@ def delete_generic(table, row_id):
     if ok:
         return {"success": True}
     return {"success": False, "error": "Table not allowed"}, 400
+
+
+@app.route('/edit_row/<table>/<int:row_id>', methods=['POST'])
+def edit_row(table, row_id):
+    data = request.get_json()
+    return edit_row_handler(table, row_id, data)
 
 
 
