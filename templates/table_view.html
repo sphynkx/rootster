@@ -27,7 +27,7 @@
 <body>
 <div class="panel">
     <div class="dropdown">
-        <a href="{{ url_for('index') }}" class="dropbtn">Main</a>
+        <a href="{{ url_for('dashboard') }}" class="dropbtn">Main</a>
         <div class="dropdown-content">
             {% for t in all_tables %}
                 <a href="{{ url_for('table_view', table=t) }}">{{ t }}</a>

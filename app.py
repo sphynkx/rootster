@@ -1,5 +1,6 @@
 #!/usr/bin/python
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, render_template
+import subprocess
 import pymysql
 from config import MYSQL_CONFIG, SECRET_KEY, PERMIT_DELETE_EXCLUDE_TABLES, EDITABLE_FIELDS
 from utils import *
@@ -20,7 +21,7 @@ def login():
         password = request.form["password"]
         if check_admin(username, password):
             session["admin"] = username
-            return redirect(url_for("index"))
+            return redirect(url_for("dashboard"))
         else:
             flash("Incorrect login or password!!")
     return render_template("login.html")
@@ -32,12 +33,64 @@ def logout():
     return redirect(url_for("login"))
 
 
+## Dummy - 2DEL
+## Replacing with Dashboard tmp/routines
 @app.route("/index")
 def index():
     if "admin" not in session:
         return redirect(url_for("login"))
     all_tables = get_table_list()
     return render_template("index.html", all_tables=all_tables)
+
+
+######### Dashboard routines ##############
+
+@app.route('/dashboard')
+def dashboard():
+    all_tables = get_table_list()
+    return render_template('dashboard.html', all_tables=all_tables)
+
+
+@app.route('/dashboard/restart_service', methods=['POST'])
+def dashboard_restart_service():
+    try:
+        subprocess.run(['systemctl', 'restart', 'korneslov-bot.service'], check=True)
+        return jsonify(success=True)
+    except Exception as e:
+        return jsonify(success=False, error=str(e))
+
+
+@app.route('/dashboard/start_service', methods=['POST'])
+def dashboard_start_service():
+    try:
+        subprocess.run(['systemctl', 'start', 'korneslov-bot.service'], check=True)
+        return jsonify(success=True)
+    except Exception as e:
+        return jsonify(success=False, error=str(e))
+
+
+@app.route('/dashboard/stop_service', methods=['POST'])
+def dashboard_stop_service():
+    try:
+        subprocess.run(['systemctl', 'stop', 'korneslov-bot.service'], check=True)
+        return jsonify(success=True)
+    except Exception as e:
+        return jsonify(success=False, error=str(e))
+
+
+@app.route('/dashboard/service_status')
+def dashboard_service_status():
+    try:
+        result = subprocess.run(
+            ['systemctl', 'is-active', 'korneslov-bot.service'],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+        )
+        status = result.stdout.strip()
+        return jsonify(status=status)
+    except Exception as e:
+        return jsonify(status="error")
+######### /Dashboard routines ##############
+
 
 
 @app.route("/table/<table>")

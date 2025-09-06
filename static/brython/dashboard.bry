@@ -1,0 +1,105 @@
+from browser import document, ajax, timer
+
+
+def set_status(text, status_class):
+    status_span = document['service-status']
+    status_text = document['status-text']
+    status_span.className = status_class
+    status_text.text = text
+
+    ## Buttonz control
+    running = status_class == 'status-running'
+    stopped = status_class == 'status-stopped' or status_class == 'status-failed'
+    restarting = status_class == 'status-restarting'
+
+    document['start-btn'].disabled = running or restarting
+    document['stop-btn'].disabled = stopped or restarting
+    document['restart-btn'].disabled = restarting
+
+
+def fetch_status():
+    def on_complete(req):
+        if req.status == 200:
+            data = req.json
+            status = data.get('status', 'unknown')
+            ## Systemd statuses: active, inactive, failed, activating, etc.
+            if status == 'active':
+                set_status('Running', 'status-running')
+            elif status in ('inactive', 'deactivating'):
+                set_status('Stopped', 'status-stopped')
+            elif status in ('failed', 'error'):
+                set_status('Failed', 'status-failed')
+            elif status in ('activating', 'restarting'):
+                set_status('Restarting...', 'status-restarting')
+            else:
+                set_status(status, 'status-unknown')
+        else:
+            set_status('Unknown', 'status-unknown')
+    req = ajax.ajax()
+    req.bind('complete', on_complete)
+    req.open('GET', '/dashboard/service_status', True)
+    req.send()
+
+
+def restart_service(ev):
+    set_status('Restarting...', 'status-restarting')
+    def on_complete(req):
+        def after_restart():
+            fetch_status()
+        if req.status == 200 and req.json.get('success', False):
+            set_status('Restarting...', 'status-restarting')
+            timer.set_timeout(after_restart, 2000)
+        else:
+            set_status('Restart failed', 'status-failed')
+    req = ajax.ajax()
+    req.bind('complete', on_complete)
+    req.open('POST', '/dashboard/restart_service', True)
+    req.set_header('Content-Type', 'application/json')
+    req.send()
+
+
+def start_service(ev):
+    set_status('Starting...', 'status-restarting')
+    def on_complete(req):
+        def after_start():
+            fetch_status()
+        if req.status == 200 and req.json.get('success', False):
+            set_status('Starting...', 'status-restarting')
+            timer.set_timeout(after_start, 2000)
+        else:
+            set_status('Start failed', 'status-failed')
+    req = ajax.ajax()
+    req.bind('complete', on_complete)
+    req.open('POST', '/dashboard/start_service', True)
+    req.set_header('Content-Type', 'application/json')
+    req.send()
+
+
+def stop_service(ev):
+    set_status('Stopping...', 'status-restarting')
+    def on_complete(req):
+        def after_stop():
+            fetch_status()
+        if req.status == 200 and req.json.get('success', False):
+            set_status('Stopping...', 'status-restarting')
+            timer.set_timeout(after_stop, 2000)
+        else:
+            set_status('Stop failed', 'status-failed')
+    req = ajax.ajax()
+    req.bind('complete', on_complete)
+    req.open('POST', '/dashboard/stop_service', True)
+    req.set_header('Content-Type', 'application/json')
+    req.send()
+
+
+document['restart-btn'].bind('click', restart_service)
+document['start-btn'].bind('click', start_service)
+document['stop-btn'].bind('click', stop_service)
+
+
+## Dyn refresh stasus item every 5 sec
+def periodic_update():
+    fetch_status()
+    timer.set_timeout(periodic_update, 5000)
+periodic_update()
+fetch_status()
