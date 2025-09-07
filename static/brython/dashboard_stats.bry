@@ -1,0 +1,110 @@
+from browser import document, ajax, window
+from random import randint
+
+charts = {}
+
+
+def update_stats():
+    def on_complete(req):
+        if req.status == 200:
+            data = req.json
+            document['total-users'].text = str(data['total_users'])
+            document['active-percent'].text = f"{data['active_percent']}%"
+            document['min-delay'].text = str(data['request_time_min'])
+            document['max-delay'].text = str(data['request_time_max'])
+            document['avg-delay'].text = str(data['request_time_avg'])
+            document['lang-ru'].text = f"{data['lang_ru_percent']}%"
+            document['lang-en'].text = f"{data['lang_en_percent']}%"
+    req = ajax.ajax()
+    req.bind('complete', on_complete)
+    req.open('GET', '/dashboard/api/stats/summary', True)
+    req.send()
+
+
+def draw_requests_chart(days, counts):
+    ctx = document["requests-chart"]
+    # Destroy previous chart if exists
+    if "requests-chart" in charts and charts["requests-chart"]:
+        try:
+            charts["requests-chart"].destroy()
+        except Exception as e:
+            ## While the Chart.js has been requested already - ignore error
+            pass
+    data = {
+        "labels": days,
+        "datasets": [{
+            "label": "Requests for day",
+            "data": counts,
+            "fill": False,
+            "borderColor": "rgb(75, 192, 192)",
+            "tension": 0.1
+        }]
+    }
+    charts["requests-chart"] = window.Chart.new(ctx, {
+        "type": "line",
+        "data": data,
+        "options": {
+            "responsive": True,
+            "maintainAspectRatio": False,
+            "scales": {
+                "y": {"beginAtZero": True}
+            }
+        }
+    })
+
+
+def draw_books_donut(labels, data):
+    ctx = document["books-donut"]
+    # Destroy previous chart if exists
+    if "books-donut" in charts and charts["books-donut"]:
+        try:
+            charts["books-donut"].destroy()
+        except Exception as e:
+            pass
+
+    ## Randomly generate colors pallete for donut sectors
+    colors = [f'#{randint(0, 0xFFFFFF):06x}' for _ in range(len(labels))]
+
+    chart_data = {
+        "labels": labels,
+        "datasets": [{
+            "label": "Hits to book",
+            "data": data,
+            "backgroundColor": colors,
+            "borderWidth": 1
+        }]
+    }
+    charts["books-donut"] = window.Chart.new(ctx, {
+        "type": "doughnut",
+        "data": chart_data,
+        "options": {
+            "responsive": True,
+            "maintainAspectRatio": False,
+            "cutout": "60%",
+            "plugins": {
+                "legend": {"position": "right"}
+            }
+        }
+    })
+
+
+def on_requests_day_loaded(req):
+    if req.status == 200:
+        data = req.json
+        draw_requests_chart(data["days"], data["counts"])
+
+
+def on_books_hits_loaded(req):
+    if req.status == 200:
+        data = req.json
+        draw_books_donut(data["labels"], data["data"])
+
+
+def main():
+    update_stats()
+    ajax.get("/dashboard/api/stats/requests_by_day", oncomplete=on_requests_day_loaded)
+    ajax.get("/dashboard/api/stats/books_hits", oncomplete=on_books_hits_loaded)
+
+
+
+main()

@@ -1,0 +1,78 @@
+/* Sys-Card */
+#service-block {
+    margin-bottom: 1em;
+    padding: 5px;
+    background: #fff;
+    border: 2px dotted grey;
+    box-shadow: 5px 5px 5px #aaa;
+    border-radius: 10px;
+    display: inline-block;
+    white-space: nowrap;
+position: fixed;
+top: 20px;
+right: 32px;
+z-index: 1000;
+}
+#start-btn, #stop-btn, #restart-btn {
+    border: 2px dotted #888;
+    box-shadow: 5px 5px 5px #aaa;
+    border-radius: 5px;	
+}
+#service-block button { 
+    margin: 0 6px; 
+}
+#service-status {
+    font-weight: bold;
+    padding: 0.4em 1em;
+    border-radius: 0.4em;
+    box-shadow: 5px 5px 5px #aaa;
+    margin-left: 1em;
+    border: 1px solid #ccc;
+}
+.status-running {
+    background: #c7f7c7; 
+    color: #156d15; 
+    border-color: #2ecc40; 
+}
+.status-stopped, .status-failed { 
+    background: #f7c7c7; 
+    color: #a60000; 
+    border-color: #e74c3c; 
+}
+.status-restarting { 
+    background: #fff7c7; 
+    color: #b68c00; 
+    border-color: #f39c12; 
+}
+.status-unknown { 
+    background: #eee; 
+    color: #444; 
+    border-color: #bbb; 
+}
+
+/* --- Stats - cards and charts --- */
+.dashboard-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    justify-content: center;
+    align-items: flex-start;
+    margin-bottom: 2em;
+}
+
+.card {
+    margin-bottom: 1em;
+    padding: 5px;
+    background: #fff;
+    border: 2px dotted grey;
+    box-shadow: 5px 5px 5px #aaa;
+    border-radius: 10px;
+    display: inline-block;
+    white-space: nowrap;
+    min-width: 220px;
+    max-width: 320px;
+    min-height: 200px;
+    max-height: 75px;
+    box-sizing: border-box;
+    vertical-align: top;
+}

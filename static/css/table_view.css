@@ -1,0 +1,48 @@
+
+/* All DB tables */
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px dotted grey;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 5px 5px 5px #aaa;
+}
+th, td {
+	border: 1px dotted #888;
+	padding: 4px 8px;
+    vertical-align: top;
+	}
+th {
+    background: #eee;
+}
+td.col-max_verses {/* Forcely split long lines in `max_verses` field (`books` table) */
+    word-break: break-all;
+    white-space: pre-line;
+    max-width: 350px;
+}
+
+
+/* Delete, Edit, Save, Undo buttons for tables rows */
+.delete-btn {
+	border: 2px dotted #888;
+    box-shadow: 5px 5px 5px #aaa;
+    border-radius: 5px;	
+}
+.save-btn, .edit-btn, .undo-btn {
+	border: 2px dotted #888;
+    box-shadow: 5px 5px 5px #aaa;
+    border-radius: 5px;	
+	width: 30px;
+}
+
+
+/* "Show more" in the `table_view.html` - for big `data` field. */
+summary {
+    border: 2px dotted grey;
+    box-shadow: 5px 5px 5px #aaa;
+	width: 150px;
+	padding: 5px;
+    font-weight: bold;
+    font-size: 20px;
+}

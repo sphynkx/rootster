@@ -1,0 +1,14 @@
+
+/* Common text beautifications */
+h1 {
+	text-align: center;
+}
+h1, h2, h3, a, .login_label {
+    text-shadow: 2px 5px 5px #aaa;	
+    font-weight: bold;
+}
+
+
+
+
+

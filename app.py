@@ -1,5 +1,6 @@
 #!/usr/bin/python
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, render_template
+from datetime import datetime, timedelta
 import subprocess
 import pymysql
 from config import MYSQL_CONFIG, SECRET_KEY, PERMIT_DELETE_EXCLUDE_TABLES, EDITABLE_FIELDS
@@ -8,6 +9,8 @@ from db import get_db
 from db.read import *
 from db.delete import *
 from db.edit import *
+from db.stats import *
+
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
@@ -33,17 +36,8 @@ def logout():
     return redirect(url_for("login"))
 
 
-## Dummy - 2DEL
-## Replacing with Dashboard tmp/routines
-@app.route("/index")
-def index():
-    if "admin" not in session:
-        return redirect(url_for("login"))
-    all_tables = get_table_list()
-    return render_template("index.html", all_tables=all_tables)
 
-
-######### Dashboard routines ##############
+######### Dashboard sys-routines ##############
 
 @app.route('/dashboard')
 def dashboard():
@@ -89,7 +83,56 @@ def dashboard_service_status():
         return jsonify(status=status)
     except Exception as e:
         return jsonify(status="error")
-######### /Dashboard routines ##############
+######### /Dashboard sys-routines ##############
+
+
+######### Dashboard stat-routines ##############
+@app.route('/dashboard/api/stats/summary')
+def dashboard_stats_summary():
+    total_users = get_total_users()
+    active_users = get_active_users()
+    if total_users > 0:
+        active_percent = int(active_users / total_users * 100)
+    else:
+        active_percent = 10
+    min_delay, max_delay, avg_delay = get_request_time_stats()
+    ru_percent, en_percent = get_language_percent()
+    ##print(f" {min_delay=} , {max_delay=} , {avg_delay=}" )
+    return jsonify({
+        "total_users": total_users,
+        "active_users": active_users,
+        "active_percent": round(active_users * 100 / total_users, 1) if total_users else 0,
+        "request_time_min": round(min_delay, 1),
+        "request_time_max": round(max_delay, 1),
+        "request_time_avg": round(avg_delay, 1),
+        "lang_ru_percent": ru_percent,
+        "lang_en_percent": en_percent,
+    })
+
+
+@app.route('/dashboard/api/stats/requests_by_day')
+def requests_by_day():
+    rows = get_requests_by_day()
+    today = datetime.datetime.now().date()
+    date_map = {str(row['day']): row['count'] for row in rows}
+    days = []
+    counts = []
+    for i in range(7):
+        d = (today - timedelta(days=6-i)).strftime("%Y-%m-%d")
+        days.append(d)
+        counts.append(date_map.get(d, 0))
+    return jsonify({"days": days, "counts": counts})
+
+
+@app.route('/dashboard/api/stats/books_hits')
+def books_hits():
+    rows = get_books_hits()
+    labels = [row['bookname_ru'] for row in rows]
+    data = [row['hits'] for row in rows]
+    return jsonify({"labels": labels, "data": data})
+
+
+######### /Dashboard stat-routines ##############
 
 
 

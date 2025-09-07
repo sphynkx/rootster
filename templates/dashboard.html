@@ -3,11 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/top_panel.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
     <link rel="stylesheet" href="https://unpkg.com/pell/dist/pell.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython_stdlib.js"></script>
     <script type="text/python" src="{{ url_for('static', filename='brython/dashboard.bry') }}"></script>
+    <script type="text/python" src="{{ url_for('static', filename='brython/dashboard_stats.bry') }}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         window.onload = function() { brython(); }
         window.all_tables = {{ all_tables|tojson }};
@@ -26,13 +30,47 @@
     <a href="{{ url_for('logout') }}">Logout</a>
 </div>
 <h1>Dashboard</h1>
-<div id="service-block">
-<h2>Bot system control</h2>
-    <button id="start-btn">Start</button>
-    <button id="stop-btn">Stop</button>
-    <button id="restart-btn">Restart</button>
-    <br><p><br>
-	<span id="service-status" class="status-unknown">Status: <span id="status-text">---</span></span></p>
-</div>
+    <div class="card" id="service-block">
+        <h3>Bot system control</h3>
+        <button id="start-btn">Start</button>
+        <button id="stop-btn">Stop</button>
+        <button id="restart-btn">Restart</button>
+        <br><p><br>
+        <span id="service-status" class="status-unknown">Status: <span id="status-text">---</span></span>
+        </p>
+    </div>
+
+	<div class="dashboard-grid">
+		<div class="card">
+			<h3>Total Users</h3>
+			<span id="total-users">...</span>
+			<h3>Active %</h3>
+			<span id="active-percent">...</span>
+		</div>
+		<div class="card">
+			<h3>Request Time</h3>
+			Min: <span id="min-delay">...</span> sec<br>
+			Max: <span id="max-delay">...</span> sec<br>
+			Avg: <span id="avg-delay">...</span> sec
+		</div>
+		<div class="card">
+			<h3>Language</h3>
+			RU: <span id="lang-ru">...</span><br>
+			EN: <span id="lang-en">...</span>
+		</div>
+	</div>
+
+
+	<div style="display: flex; gap: 60px; align-items: center;">
+		<div style="width: 800px; height: 500px;">
+	<!-- Line diagram - by requests -->
+			<canvas id="requests-chart" style="border: 1px solid #ccc;box-shadow: 5px 5px 5px #aaa;"></canvas>
+		</div>
+		<div style="width: 800px; height: 500px;">
+	<!-- Donut (bublik!!): by books -->
+			<canvas id="books-donut" style="border: 1px solid #ccc;box-shadow: 5px 5px 5px #aaa;"></canvas>
+		</div>
+	</div>
+
 </body>
 </html>

@@ -1,0 +1,55 @@
+/* Static panel at the top */
+.panel {
+    margin-bottom: 1em;
+    padding: 5px;
+    background: #fff;
+    /*width: 270px;*/
+    border: 2px dotted grey;
+    box-shadow: 5px 5px 5px #aaa;
+    border-radius: 10px;
+    display: inline-block;
+    white-space: nowrap;
+    position: sticky;
+    top: 2px;
+    z-index: 100;
+}
+.panel a {
+    margin-right: 1em;
+    font-weight: bold;
+    color: #337ab7;
+    text-decoration: none;
+}
+.panel a:hover {
+    text-decoration: underline;
+}
+.dropdown {
+	position: relative;
+	display: inline-block;
+}
+.dropbtn {
+	cursor: pointer;
+	text-decoration: none;
+}
+.dropdown-content {
+	display: none;
+	position: absolute;
+	left: 0;
+	background-color: #fff;
+	min-width: 160px;
+	box-shadow: 2px 2px 4px #aaa;
+	border: 1px solid #aaa;
+	border-radius: 10px;
+	z-index: 200;
+}
+.dropdown-content a {
+	color: #333;
+	padding: 8px 12px;
+	text-decoration: none;
+	display: block;
+}
+.dropdown-content a:hover {
+	background-color: #eee;
+}
+.dropdown:hover .dropdown-content {
+	display: block;
+}
