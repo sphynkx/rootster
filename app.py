@@ -42,7 +42,13 @@ def logout():
 @app.route('/dashboard')
 def dashboard():
     all_tables = get_table_list()
-    return render_template('dashboard.html', all_tables=all_tables)
+    top10_users = [row['user_id'] for row in get_top10_users()]
+    top10_books = [row['bookname_ru'] for row in get_top10_books()]
+    return render_template('dashboard.html',
+                          all_tables=all_tables,
+                          top10_users=top10_users,
+                          top10_books=top10_books
+    )
 
 
 @app.route('/dashboard/restart_service', methods=['POST'])

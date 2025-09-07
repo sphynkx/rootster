@@ -1,15 +1,12 @@
 from flask import jsonify
-##from utils import clean_quill_html
 from app import get_db, EDITABLE_FIELDS, PERMIT_DELETE_EXCLUDE_TABLES
+
 
 def edit_row_handler(table, row_id, data):
     if table in PERMIT_DELETE_EXCLUDE_TABLES:
         return jsonify(success=False, error="Editing not allowed for this table.")
 
     editable_fields = EDITABLE_FIELDS.get(table, [])
-##2DEL - unactual
-##    if table == 'responses' and 'data' in data:
-##        data['data'] = clean_quill_html(data['data'])
     updates = {}
     for key in data:
         if key in editable_fields:
@@ -30,3 +27,4 @@ def edit_row_handler(table, row_id, data):
         return jsonify(success=True)
     except Exception as e:
         return jsonify(success=False, error=str(e))
+

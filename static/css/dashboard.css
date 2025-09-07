@@ -76,3 +76,54 @@ z-index: 1000;
     box-sizing: border-box;
     vertical-align: top;
 }
+#requests-chart {
+	border: 1px solid #ccc;
+	box-shadow: 5px 5px 5px #aaa;
+}
+#books-donut {
+	border: 1px solid #ccc;
+	box-shadow: 5px 5px 5px #aaa;
+}
+
+/* Top10 tables */
+.top10block {
+	width: 100%; 
+	display: flex; 
+	justify-content: center;
+}
+.dashboard-tables-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    justify-content: center;
+    margin: 40px 0;
+    width: 50%;
+}
+.dashboard-table-box {
+    background: #fdfdfd;
+    border: 1px solid #e0e0e0;
+    box-shadow: 4px 4px 12px #ebebeb;
+    border-radius: 10px;
+    padding: 28px 18px;
+    text-align: left;
+    min-width: 200px;
+}
+.dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    font-size: 1.04em;
+}
+.dashboard-table thead th {
+    background: #f5f5f5;
+    padding: 10px;
+    border-bottom: 1px solid #bbb;
+    font-weight: bold;
+}
+.dashboard-table td {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+.dashboard-table tr:last-child td {
+    border-bottom: none;
+}

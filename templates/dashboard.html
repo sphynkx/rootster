@@ -40,6 +40,7 @@
         </p>
     </div>
 
+<!-- InfoCards Block -->
 	<div class="dashboard-grid">
 		<div class="card">
 			<h3>Total Users</h3>
@@ -60,17 +61,55 @@
 		</div>
 	</div>
 
-
+<!-- Chart block -->
 	<div style="display: flex; gap: 60px; align-items: center;">
 		<div style="width: 800px; height: 500px;">
 	<!-- Line diagram - by requests -->
-			<canvas id="requests-chart" style="border: 1px solid #ccc;box-shadow: 5px 5px 5px #aaa;"></canvas>
+			<canvas id="requests-chart"></canvas>
 		</div>
 		<div style="width: 800px; height: 500px;">
 	<!-- Donut (bublik!!): by books -->
-			<canvas id="books-donut" style="border: 1px solid #ccc;box-shadow: 5px 5px 5px #aaa;"></canvas>
+			<canvas id="books-donut"></canvas>
 		</div>
 	</div>
+
+<!-- Top10 Block -->
+<div class="top10block">
+	<div class="dashboard-tables-row">
+	  <div class="dashboard-table-box">
+		<table class="dashboard-table">
+		  <thead>
+			<tr>
+			  <th>Top 10 Users</th>
+			</tr>
+		  </thead>
+		  <tbody>
+			{% for user_id in top10_users %}
+			<tr>
+			  <td>{{ user_id }}</td>
+			</tr>
+			{% endfor %}
+		  </tbody>
+		</table>
+	  </div>
+	  <div class="dashboard-table-box">
+		<table class="dashboard-table">
+		  <thead>
+			<tr>
+			  <th>Top 10 Books</th>
+			</tr>
+		  </thead>
+		  <tbody>
+			{% for bookname in top10_books %}
+			<tr>
+			  <td>{{ bookname }}</td>
+			</tr>
+			{% endfor %}
+		  </tbody>
+		</table>
+	  </div>
+	</div>
+</div>
 
 </body>
 </html>

@@ -27,7 +27,6 @@ def get_request_time_stats():
         cursor.execute("SELECT MIN(delay) AS min_delay, MAX(delay) AS max_delay, AVG(delay) AS avg_delay FROM requests WHERE status_oai > 0")
         row = cursor.fetchone()
     conn.close()
-    print(f"{row=}")
     if row:
         min_delay = row['min_delay'] if row['min_delay'] is not None else 0
         max_delay = row['max_delay'] if row['max_delay'] is not None else 0
@@ -91,6 +90,33 @@ def get_books_hits():
         """)
         rows = cursor.fetchall()
     conn.close()
-    print(f"get_books_hits(): {rows}")
     return rows
 
+
+def get_top10_users():
+    conn = get_db()
+    with conn.cursor() as cursor:
+        cursor.execute("""
+            SELECT user_id
+            FROM requests
+            GROUP BY user_id
+            ORDER BY COUNT(*) DESC
+            LIMIT 10
+        """)
+        rows = cursor.fetchall()
+    conn.close()
+    return rows
+
+
+def get_top10_books():
+    conn = get_db()
+    with conn.cursor() as cursor:
+        cursor.execute("""
+            SELECT bookname_ru
+            FROM books
+            ORDER BY hits DESC
+            LIMIT 10
+        """)
+        rows = cursor.fetchall()
+    conn.close()
+    return rows
