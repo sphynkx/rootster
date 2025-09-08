@@ -1,5 +1,6 @@
 from flask import jsonify
-from app import get_db, EDITABLE_FIELDS, PERMIT_DELETE_EXCLUDE_TABLES
+from db import get_db, EDITABLE_FIELDS, PERMIT_DELETE_EXCLUDE_TABLES
+
 
 
 def edit_row_handler(table, row_id, data):

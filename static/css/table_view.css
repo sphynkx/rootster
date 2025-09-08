@@ -35,14 +35,25 @@ td.col-max_verses {/* Forcely split long lines in `max_verses` field (`books` ta
     border-radius: 5px;	
 	width: 30px;
 }
-
-
+.save-btn:active, .edit-btn:active, .undo-btn:active, .delete-btn:active {
+    box-shadow: 2px 2px 2px #aaa;
+}
+.save-btn:hover, .edit-btn:hover, .undo-btn:hover, .delete-btn:hover {
+    background: #ccc;
+}
 /* "Show more" in the `table_view.html` - for big `data` field. */
 summary {
     border: 2px dotted grey;
     box-shadow: 5px 5px 5px #aaa;
-	width: 150px;
+    border-radius: 5px;	
+	width: 120px;
 	padding: 5px;
     font-weight: bold;
     font-size: 20px;
+}
+summary:hover {
+    background: #ccc;
+}
+summary:active {
+    box-shadow: 2px 2px 2px #aaa;
 }

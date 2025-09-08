@@ -58,7 +58,6 @@ def delete_request_and_response(request_id):
         conn.close()
 
 
-
 def delete_row_from_table(table: str, row_id: int, exclude_tables: set) -> bool:
     """
     Deletes record with defined `row_id` from any tables except `requests`, `responses` and  specified in the `exclude_tables` (see `PERMIT_DELETE_EXCLUDE_TABLES` param in config).

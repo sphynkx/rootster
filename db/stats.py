@@ -2,7 +2,6 @@ import json
 from db import get_db
 
 
-
 def get_total_users():
     conn = get_db()
     with conn.cursor() as cursor:

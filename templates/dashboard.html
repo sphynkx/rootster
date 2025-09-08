@@ -20,14 +20,14 @@
 <body>
 <div class="panel">
     <div class="dropdown">
-      <a href="{{ url_for('dashboard') }}" class="dropbtn">Main</a>
+      <a href="{{ url_for('dashboard_stat.dashboard') }}" class="dropbtn">Main</a>
       <div class="dropdown-content">
         {% for table in all_tables %}
-          <a href="{{ url_for('table_view', table=table) }}">{{ table }}</a>
+          <a href="{{ url_for('table_view.table_view', table=table) }}">{{ table }}</a>
         {% endfor %}
       </div>
     </div>
-    <a href="{{ url_for('logout') }}">Logout</a>
+    <a href="{{ url_for('login.logout') }}">Logout</a>
 </div>
 <h1>Dashboard</h1>
     <div class="card" id="service-block">

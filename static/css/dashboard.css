@@ -8,15 +8,21 @@
     border-radius: 10px;
     display: inline-block;
     white-space: nowrap;
-position: fixed;
-top: 20px;
-right: 32px;
-z-index: 1000;
+	position: fixed;
+	top: 20px;
+	right: 32px;
+	z-index: 1000;
 }
 #start-btn, #stop-btn, #restart-btn {
     border: 2px dotted #888;
     box-shadow: 5px 5px 5px #aaa;
     border-radius: 5px;	
+}
+#start-btn:active, #stop-btn:active, #restart-btn:active {
+    box-shadow: 2px 2px 2px #aaa;
+}
+#start-btn:hover, #stop-btn:hover, #restart-btn:hover {
+       background: #ccc;
 }
 #service-block button { 
     margin: 0 6px; 
@@ -77,11 +83,13 @@ z-index: 1000;
     vertical-align: top;
 }
 #requests-chart {
-	border: 1px solid #ccc;
+    border: 2px dotted grey;
+    border-radius: 10px;
 	box-shadow: 5px 5px 5px #aaa;
 }
 #books-donut {
-	border: 1px solid #ccc;
+    border: 2px dotted grey;
+    border-radius: 10px;
 	box-shadow: 5px 5px 5px #aaa;
 }
 
@@ -101,8 +109,8 @@ z-index: 1000;
 }
 .dashboard-table-box {
     background: #fdfdfd;
-    border: 1px solid #e0e0e0;
-    box-shadow: 4px 4px 12px #ebebeb;
+    border: 2px dotted grey;
+    box-shadow: 5px 5px 5px #aaa;
     border-radius: 10px;
     padding: 28px 18px;
     text-align: left;
