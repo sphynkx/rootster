@@ -50,16 +50,16 @@
     {% for row in rows %}
     <tr data-row-id="{{ row['id'] }}">
         <td>
+            {% if table == "requests" %}
+                <button class="delete-btn" data-request-id="{{ row['id'] }}" title="Delete WHOLE row">DEL</button>
+            {% elif table == "responses" %}
+                <button class="delete-btn" data-response-id="{{ row['id'] }}" title="Delete WHOLE row">DEL</button>
+            {% else %}
+                <button class="delete-btn" data-generic-id="{{ row['id'] }}" title="Delete WHOLE row">DEL</button>
+            {% endif %}
             <button class="edit-btn" title="Edit">&#9998;</button>
             <button class="save-btn" title="Save" style="display:none;">&#128190;</button>
             <button class="undo-btn" title="Undo" style="display:none;">&#8630;</button>
-            {% if table == "requests" %}
-                <button class="delete-btn" data-request-id="{{ row['id'] }}">DEL</button>
-            {% elif table == "responses" %}
-                <button class="delete-btn" data-response-id="{{ row['id'] }}">DEL</button>
-            {% else %}
-                <button class="delete-btn" data-generic-id="{{ row['id'] }}">DEL</button>
-            {% endif %}
         </td>
         {% set preview_limit = 2000 %}
         {% for col in columns %}
