@@ -11,6 +11,7 @@
     white-space: nowrap;
     position: sticky;
     top: 2px;
+	left: 150px;
     z-index: 100;
 }
 .panel a {
