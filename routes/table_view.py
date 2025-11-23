@@ -10,7 +10,7 @@ table_view_bp = Blueprint('table_view', __name__)
 @table_view_bp.route("/table/<table>")
 def table_view(table):
     if "admin" not in session:
-        return redirect(url_for("login"))
+        return redirect(url_for("login.login"))
     all_tables = get_table_list()
     rows, columns = get_table_rows_and_columns(table)
     return render_template(
